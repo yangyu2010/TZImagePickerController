@@ -352,11 +352,11 @@
     [super layoutSubviews];
     _cannotSelectLayerButton.frame = self.bounds;
     if (self.allowPreview) {
-        _selectPhotoButton.frame = CGRectMake(self.tz_width - 44, 0, 44, 44);
+        _selectPhotoButton.frame = CGRectMake(self.tz_width - 44, self.tz_height - 44, 44, 44);
     } else {
         _selectPhotoButton.frame = self.bounds;
     }
-    _selectImageView.frame = CGRectMake(self.tz_width - 27, 3, 24, 24);
+    _selectImageView.frame = CGRectMake(self.tz_width - 27, self.tz_height - 27, 24, 24);
     if (_selectImageView.image.size.width <= 27) {
         _selectImageView.contentMode = UIViewContentModeCenter;
     } else {

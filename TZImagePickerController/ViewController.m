@@ -279,7 +279,7 @@
     // 设置languageBundle以使用其它语言，必须在TZImagePickerController初始化前设置 / Set languageBundle to use other language
     // [TZImagePickerConfig sharedInstance].languageBundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"tz-ru" ofType:@"lproj"]];
 
-    TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:self.maxCountTF.text.integerValue columnNumber:self.columnNumberTF.text.integerValue delegate:self pushPhotoPickerVc:YES];
+    TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:6 columnNumber:self.columnNumberTF.text.integerValue delegate:self pushPhotoPickerVc:YES];
     
 #pragma mark - 五类个性化设置，这些参数都可以不传，此时会走默认设置
     imagePickerVc.isSelectOriginalPhoto = _isSelectOriginalPhoto;
@@ -288,13 +288,13 @@
         // 1.设置目前已经选中的图片数组
         imagePickerVc.selectedAssets = _selectedAssets; // 目前已经选中的图片数组
     }
-    imagePickerVc.allowTakePicture = self.showTakePhotoBtnSwitch.isOn; // 在内部显示拍照按钮
-    imagePickerVc.allowTakeVideo = self.showTakeVideoBtnSwitch.isOn;   // 在内部显示拍视频按
-    imagePickerVc.videoMaximumDuration = 10; // 视频最大拍摄时间
-    imagePickerVc.allowEditVideo = YES; // 允许编辑视频
+//    imagePickerVc.allowTakePicture = self.showTakePhotoBtnSwitch.isOn; // 在内部显示拍照按钮
+//    imagePickerVc.allowTakeVideo = self.showTakeVideoBtnSwitch.isOn;   // 在内部显示拍视频按
+//    imagePickerVc.videoMaximumDuration = 10; // 视频最大拍摄时间
+//    imagePickerVc.allowEditVideo = YES; // 允许编辑视频
     // imagePickerVc.saveEditedVideoToCollection = YES; // 编辑后的视频是否自动保存到相册
     // imagePickerVc.maxCropVideoDuration = 30; // 裁剪视频的最大时长
-    // imagePickerVc.presetName = AVAssetExportPresetMediumQuality // 编辑后的视频的导出质量
+//     imagePickerVc.presetName = AVAssetExportPresetMediumQuality // 编辑后的视频的导出质量
     [imagePickerVc setUiImagePickerControllerSettingBlock:^(UIImagePickerController *imagePickerController) {
         imagePickerController.videoQuality = UIImagePickerControllerQualityTypeHigh;
     }];
@@ -303,26 +303,35 @@
     // imagePickerVc.photoWidth = 1600;
     // imagePickerVc.photoPreviewMaxWidth = 1600;
     
+    imagePickerVc.photoDefImage = [UIImage imageNamed:@"select_but"];
+    imagePickerVc.photoSelImage = [UIImage imageNamed:@"selected_btn"];
+    imagePickerVc.iconThemeColor = [UIColor colorNamed:@"#437AFF"];
+//    imagePickerVc.naviBgColor = [UIColor whiteColor];
+//    imagePickerVc.naviTitleColor = [UIColor blackColor];
+    imagePickerVc.naviTitleFont = [UIFont systemFontOfSize:15 weight:UIFontWeightSemibold];
+
+    
+
     // 2. Set the appearance
     // 2. 在这里设置imagePickerVc的外观
-    // imagePickerVc.navigationBar.barTintColor = [UIColor greenColor];
-    // imagePickerVc.oKButtonTitleColorDisabled = [UIColor lightGrayColor];
-    // imagePickerVc.oKButtonTitleColorNormal = [UIColor greenColor];
-    // imagePickerVc.barItemTextColor = [UIColor blackColor];
-    // imagePickerVc.navigationBar.translucent = NO;
-    // [imagePickerVc.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor blackColor]}];
-    // imagePickerVc.navigationBar.tintColor = [UIColor blackColor];
-    // if (@available(iOS 13.0, *)) {
-    //     UINavigationBarAppearance *barAppearance = [[UINavigationBarAppearance alloc] init];
-    //     barAppearance.backgroundColor = imagePickerVc.navigationBar.barTintColor;
-    //     barAppearance.titleTextAttributes = imagePickerVc.navigationBar.titleTextAttributes;
-    //     imagePickerVc.navigationBar.standardAppearance = barAppearance;
-    //     imagePickerVc.navigationBar.scrollEdgeAppearance = barAppearance;
-    // }
-    
-    imagePickerVc.iconThemeColor = [UIColor colorWithRed:31 / 255.0 green:185 / 255.0 blue:34 / 255.0 alpha:1.0];
-    imagePickerVc.showPhotoCannotSelectLayer = YES;
-    imagePickerVc.cannotSelectLayerColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8];
+     imagePickerVc.navigationBar.barTintColor = [UIColor whiteColor];
+     imagePickerVc.oKButtonTitleColorDisabled = [UIColor lightGrayColor];
+     imagePickerVc.oKButtonTitleColorNormal = [UIColor whiteColor];
+     imagePickerVc.barItemTextColor = [UIColor blackColor];
+     imagePickerVc.navigationBar.translucent = NO;
+     [imagePickerVc.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor blackColor]}];
+     imagePickerVc.navigationBar.tintColor = [UIColor blackColor];
+     if (@available(iOS 13.0, *)) {
+         UINavigationBarAppearance *barAppearance = [[UINavigationBarAppearance alloc] init];
+         barAppearance.backgroundColor = imagePickerVc.navigationBar.barTintColor;
+         barAppearance.titleTextAttributes = imagePickerVc.navigationBar.titleTextAttributes;
+         imagePickerVc.navigationBar.standardAppearance = barAppearance;
+         imagePickerVc.navigationBar.scrollEdgeAppearance = barAppearance;
+     }
+//
+//    imagePickerVc.iconThemeColor = [UIColor colorWithRed:31 / 255.0 green:185 / 255.0 blue:34 / 255.0 alpha:1.0];
+//    imagePickerVc.showPhotoCannotSelectLayer = YES;
+//    imagePickerVc.cannotSelectLayerColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8];
     /*
     [imagePickerVc setPhotoPickerPageUIConfigBlock:^(UICollectionView *collectionView, UIView *bottomToolBar, UIButton *previewButton, UIButton *originalPhotoButton, UILabel *originalPhotoLabel, UIButton *doneButton, UIImageView *numberImageView, UILabel *numberLabel, UIView *divideLine) {
         [doneButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
@@ -337,11 +346,11 @@
     
     // 3. Set allow picking video & photo & originalPhoto or not
     // 3. 设置是否可以选择视频/图片/原图
-    imagePickerVc.allowPickingVideo = self.allowPickingVideoSwitch.isOn;
+//    imagePickerVc.allowPickingVideo = self.allowPickingVideoSwitch.isOn;
     imagePickerVc.allowPickingImage = self.allowPickingImageSwitch.isOn;
-    imagePickerVc.allowPickingOriginalPhoto = self.allowPickingOriginalPhotoSwitch.isOn;
-    imagePickerVc.allowPickingGif = self.allowPickingGifSwitch.isOn;
-    imagePickerVc.allowPickingMultipleVideo = self.allowPickingMuitlpleVideoSwitch.isOn; // 是否可以多选视频
+    imagePickerVc.allowPickingOriginalPhoto = NO;
+//    imagePickerVc.allowPickingGif = self.allowPickingGifSwitch.isOn;
+//    imagePickerVc.allowPickingMultipleVideo = self.allowPickingMuitlpleVideoSwitch.isOn; // 是否可以多选视频
     
     // 4. 照片排列按修改时间升序
     imagePickerVc.sortAscendingByModificationDate = self.sortAscendingSwitch.isOn;
@@ -354,20 +363,20 @@
     
     /// 5. Single selection mode, valid when maxImagesCount = 1
     /// 5. 单选模式,maxImagesCount为1时才生效
-    imagePickerVc.showSelectBtn = NO;
-    imagePickerVc.allowCrop = self.allowCropSwitch.isOn;
-    imagePickerVc.needCircleCrop = self.needCircleCropSwitch.isOn;
-    // 设置竖屏下的裁剪尺寸
-    NSInteger left = 30;
-    NSInteger widthHeight = self.view.tz_width - 2 * left;
-    NSInteger top = (self.view.tz_height - widthHeight) / 2;
-    if ([TZCommonTools tz_isLandscape]) {
-        top = 30;
-        widthHeight = self.view.tz_height - 2 * left;
-        left = (self.view.tz_width - widthHeight) / 2;
-    }
-    imagePickerVc.cropRect = CGRectMake(left, top, widthHeight, widthHeight);
-    imagePickerVc.scaleAspectFillCrop = YES;
+//    imagePickerVc.showSelectBtn = NO;
+//    imagePickerVc.allowCrop = self.allowCropSwitch.isOn;
+//    imagePickerVc.needCircleCrop = self.needCircleCropSwitch.isOn;
+//    // 设置竖屏下的裁剪尺寸
+//    NSInteger left = 30;
+//    NSInteger widthHeight = self.view.tz_width - 2 * left;
+//    NSInteger top = (self.view.tz_height - widthHeight) / 2;
+//    if ([TZCommonTools tz_isLandscape]) {
+//        top = 30;
+//        widthHeight = self.view.tz_height - 2 * left;
+//        left = (self.view.tz_width - widthHeight) / 2;
+//    }
+//    imagePickerVc.cropRect = CGRectMake(left, top, widthHeight, widthHeight);
+//    imagePickerVc.scaleAspectFillCrop = YES;
     // 设置横屏下的裁剪尺寸
     // imagePickerVc.cropRectLandscape = CGRectMake((self.view.tz_height - widthHeight) / 2, left, widthHeight, widthHeight);
     /*
@@ -388,35 +397,10 @@
     
     // Deprecated, Use statusBarStyle
     // imagePickerVc.isStatusBarDefault = NO;
-    imagePickerVc.statusBarStyle = UIStatusBarStyleLightContent;
+//    imagePickerVc.statusBarStyle = UIStatusBarStyleLightContent;
     
     // 设置是否显示图片序号
-    imagePickerVc.showSelectedIndex = self.showSelectedIndexSwitch.isOn;
-    
-    // 设置拍照时是否需要定位，仅对选择器内部拍照有效，外部拍照的，请拷贝demo时手动把pushImagePickerController里定位方法的调用删掉
-    // imagePickerVc.allowCameraLocation = NO;
-    
-    // 自定义gif播放方案
-    [[TZImagePickerConfig sharedInstance] setGifImagePlayBlock:^(TZPhotoPreviewView *view, UIImageView *imageView, NSData *gifData, NSDictionary *info) {
-        FLAnimatedImage *animatedImage = [FLAnimatedImage animatedImageWithGIFData:gifData];
-        FLAnimatedImageView *animatedImageView;
-        for (UIView *subview in imageView.subviews) {
-            if ([subview isKindOfClass:[FLAnimatedImageView class]]) {
-                animatedImageView = (FLAnimatedImageView *)subview;
-                animatedImageView.frame = imageView.bounds;
-                animatedImageView.animatedImage = nil;
-            }
-        }
-        if (!animatedImageView) {
-            animatedImageView = [[FLAnimatedImageView alloc] initWithFrame:imageView.bounds];
-            animatedImageView.runLoopMode = NSDefaultRunLoopMode;
-            [imageView addSubview:animatedImageView];
-        }
-        animatedImageView.animatedImage = animatedImage;
-    }];
-    
-    // 设置首选语言 / Set preferred language
-    // imagePickerVc.preferredLanguage = @"zh-Hans";
+    imagePickerVc.showSelectedIndex = YES;
     
 #pragma mark - 到这里为止
     
