@@ -308,7 +308,7 @@ static CGFloat itemMargin = 5;
     [_doneButton setTitleColor:tzImagePickerVc.oKButtonTitleColorDisabled forState:UIControlStateDisabled];
     [_doneButton setBackgroundColor:tzImagePickerVc.iconThemeColor];
     _doneButton.enabled = tzImagePickerVc.selectedModels.count || tzImagePickerVc.alwaysEnableDoneBtn;
-    [_doneButton setContentEdgeInsets:UIEdgeInsetsMake(0, 8, 0, 8)];
+    [_doneButton setContentEdgeInsets:UIEdgeInsetsMake(8, 12, 8, 12)];
     _doneButton.layer.cornerRadius = 4;
     
     _numberImageView = [[UIImageView alloc] initWithImage:tzImagePickerVc.photoNumberIconImage];
@@ -420,8 +420,11 @@ static CGFloat itemMargin = 5;
         _originalPhotoButton.frame = CGRectMake(CGRectGetMaxX(_previewButton.frame), 0, fullImageWidth + 56, 50);
         _originalPhotoLabel.frame = CGRectMake(fullImageWidth + 46, 0, 80, 50);
     }
+    
     [_doneButton sizeToFit];
-    _doneButton.frame = CGRectMake(self.view.tz_width - 98 - 12, 9, 98, 32);
+    _doneButton.frame = CGRectMake(self.view.tz_width - _doneButton.tz_width - 12, 9, 0, 32);
+    [_doneButton sizeToFit];
+
     _numberImageView.frame = CGRectMake(_doneButton.tz_left - 24 - 5, 13, 24, 24);
     _numberLabel.frame = _numberImageView.frame;
     _divideLine.frame = CGRectMake(0, 0, self.view.tz_width, 1);
@@ -887,6 +890,9 @@ static CGFloat itemMargin = 5;
     if (tzImagePickerVc.photoPickerPageDidRefreshStateBlock) {
         tzImagePickerVc.photoPickerPageDidRefreshStateBlock(_collectionView, _bottomToolBar, _previewButton, _originalPhotoButton, _originalPhotoLabel, _doneButton, _numberImageView, _numberLabel, _divideLine);;
     }
+    
+    [self.view setNeedsLayout];
+    [self.view layoutIfNeeded];
 }
 
 - (void)pushPhotoPrevireViewController:(TZPhotoPreviewController *)photoPreviewVc {

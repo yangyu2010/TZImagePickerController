@@ -214,7 +214,7 @@
     [_doneButton setTitleColor:_tzImagePickerVc.oKButtonTitleColorNormal forState:UIControlStateNormal];
     _doneButton.titleLabel.font = [UIFont systemFontOfSize:15 weight:UIFontWeightSemibold];
     [_doneButton setBackgroundColor:_tzImagePickerVc.iconThemeColor];
-    [_doneButton setContentEdgeInsets:UIEdgeInsetsMake(0, 8, 0, 8)];
+    [_doneButton setContentEdgeInsets:UIEdgeInsetsMake(8, 12, 8, 12)];
     _doneButton.layer.cornerRadius = 4;
     [_doneButton setTitle:_tzImagePickerVc.doneBtnTitleStr forState:UIControlStateDisabled];
     [_doneButton setTitleColor:_tzImagePickerVc.oKButtonTitleColorDisabled forState:UIControlStateDisabled];
@@ -341,7 +341,10 @@
         [_collectionView reloadData];
     }
     
-    CGFloat toolBarHeight = 130 + [TZCommonTools tz_safeAreaInsets].bottom;
+    CGFloat toolBarHeight = 44 + [TZCommonTools tz_safeAreaInsets].bottom;
+    if (_tzImagePickerVc.selectedModels.count > 0) {
+        toolBarHeight = 130 + [TZCommonTools tz_safeAreaInsets].bottom;
+    }
     CGFloat toolBarTop = self.view.tz_height - toolBarHeight;
     _toolBar.frame = CGRectMake(0, toolBarTop, self.view.tz_width, toolBarHeight);
     
@@ -353,8 +356,15 @@
         _originalPhotoButton.frame = CGRectMake(0, 0, fullImageWidth + 56, 44);
         _originalPhotoLabel.frame = CGRectMake(fullImageWidth + 42, 0, 80, 44);
     }
+    
     [_doneButton sizeToFit];
-    _doneButton.frame = CGRectMake(self.view.tz_width - 98 - 12, 15 + 62 + 12, 98, 32);
+    if (_tzImagePickerVc.selectedModels.count > 0) {
+        _doneButton.frame = CGRectMake(self.view.tz_width - _doneButton.tz_width - 12, 15 + 62 + 12, 0, 32);
+    } else {
+        _doneButton.frame = CGRectMake(self.view.tz_width - _doneButton.tz_width - 12, 6, 0, 32);
+    }
+    [_doneButton sizeToFit];
+
     _numberImageView.frame = CGRectMake(_doneButton.tz_left - 24 - 5, 10, 24, 24);
     _numberLabel.frame = _numberImageView.frame;
     
@@ -403,6 +413,8 @@
 
 - (void)select:(UIButton *)selectButton {
     [self select:selectButton refreshCount:YES];
+    [self.view setNeedsLayout];
+    [self.view layoutIfNeeded];
 }
 
 - (void)select:(UIButton *)selectButton refreshCount:(BOOL)refreshCount {
