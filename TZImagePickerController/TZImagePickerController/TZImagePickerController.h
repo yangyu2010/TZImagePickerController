@@ -263,6 +263,8 @@
 /// icon主题色，默认是微信的绿色，值是r:31 g:185 b:34。目前仅支持showSelectedIndex为YES时的图片选中icon。如需要，请尽早设置它。
 @property (strong, nonatomic) UIColor *iconThemeColor;
 
+@property (nonatomic, copy) NSString *clearButtonTitleString;
+
 #pragma mark -
 - (void)cancelButtonClick;
 

@@ -472,7 +472,7 @@ static CGFloat itemMargin = 5;
     }
     
     [tzImagePickerVc showProgressHUD];
-    _doneButton.enabled = NO;
+//    _doneButton.enabled = NO;
     self.isFetchingMedia = YES;
     NSMutableArray *assets = [NSMutableArray array];
     NSMutableArray *photos;

@@ -27,6 +27,7 @@
     UIButton *_selectButton;
     UILabel *_indexLabel;
     NSMutableArray <UIButton *> *_arrayButtons;
+    UIButton *_clearButton;
 
     UIView *_toolBar;
     UIButton *_doneButton;
@@ -164,7 +165,7 @@
         button.tag = i;
         button.layer.cornerRadius = 2;
         button.layer.masksToBounds = YES;
-        button.imageView.contentMode = UIViewContentModeScaleToFill;
+        button.imageView.contentMode = UIViewContentModeScaleAspectFill;
         [button addTarget:self action:@selector(actionBottomImageButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         
         button.translatesAutoresizingMaskIntoConstraints = NO;
@@ -208,7 +209,7 @@
     }
     
     _doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _doneButton.titleLabel.font = [UIFont systemFontOfSize:16];
+//    _doneButton.titleLabel.font = [UIFont systemFontOfSize:16];
     [_doneButton addTarget:self action:@selector(doneButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [_doneButton setTitle:_tzImagePickerVc.doneBtnTitleStr forState:UIControlStateNormal];
     [_doneButton setTitleColor:_tzImagePickerVc.oKButtonTitleColorNormal forState:UIControlStateNormal];
@@ -220,6 +221,14 @@
     [_doneButton setTitleColor:_tzImagePickerVc.oKButtonTitleColorDisabled forState:UIControlStateDisabled];
     _doneButton.enabled = _tzImagePickerVc.selectedModels.count || _tzImagePickerVc.alwaysEnableDoneBtn;
     
+    _clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _clearButton.titleLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightMedium];
+    [_clearButton addTarget:self action:@selector(clearButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [_clearButton setTitle:_tzImagePickerVc.clearButtonTitleString forState:UIControlStateNormal];
+    [_clearButton setTitleColor:_tzImagePickerVc.iconThemeColor forState:UIControlStateNormal];
+    [_clearButton setContentEdgeInsets:UIEdgeInsetsMake(8, 8, 8, 8)];
+    [_clearButton setTitleColor:_tzImagePickerVc.oKButtonTitleColorDisabled forState:UIControlStateDisabled];
+    _clearButton.enabled = _tzImagePickerVc.selectedModels.count || _tzImagePickerVc.alwaysEnableDoneBtn;
     
     _numberImageView = [[UIImageView alloc] initWithImage:_tzImagePickerVc.photoNumberIconImage];
     _numberImageView.backgroundColor = [UIColor clearColor];
@@ -243,6 +252,7 @@
     [_originalPhotoButton addSubview:_originalPhotoLabel];
     [_toolBar addSubview:_scrollView];
     [_toolBar addSubview:_doneButton];
+    [_toolBar addSubview:_clearButton];
     [_toolBar addSubview:_originalPhotoButton];
     [_toolBar addSubview:_numberImageView];
     [_toolBar addSubview:_numberLabel];
@@ -360,11 +370,14 @@
     [_doneButton sizeToFit];
     if (_tzImagePickerVc.selectedModels.count > 0) {
         _doneButton.frame = CGRectMake(self.view.tz_width - _doneButton.tz_width - 12, 15 + 62 + 12, 0, 32);
+        _clearButton.frame = CGRectMake(4, 15 + 62 + 12, 0, 32);
     } else {
         _doneButton.frame = CGRectMake(self.view.tz_width - _doneButton.tz_width - 12, 6, 0, 32);
+        _clearButton.frame = CGRectMake(4, 6, 0, 32);
     }
     [_doneButton sizeToFit];
-
+    [_clearButton sizeToFit];
+    
     _numberImageView.frame = CGRectMake(_doneButton.tz_left - 24 - 5, 10, 24, 24);
     _numberLabel.frame = _numberImageView.frame;
     
@@ -574,6 +587,90 @@
     }
 }
 
+- (void)clearButtonClick {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"Are you sure to clear all selected pictures？" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *actionCancel = [UIAlertAction actionWithTitle:[NSBundle tz_localizedStringForKey:@"Cancel"] style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *actionOK = [UIAlertAction actionWithTitle:[NSBundle tz_localizedStringForKey:@"OK"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self clearAllSelectedPhotos];
+    }];
+    [actionOK setValue:[UIColor redColor] forKey:@"_titleTextColor"];
+
+    [alertController addAction:actionOK];
+    [alertController addAction:actionCancel];
+    [self presentViewController:alertController animated:NO completion:nil];
+}
+
+- (void)clearAllSelectedPhotos {
+    TZImagePickerController *_tzImagePickerVc = (TZImagePickerController *)self.navigationController;
+
+//    for (NSUInteger i = 0; i < _models.count; i++) {
+//        TZAssetModel *model = _models[i];
+//
+//    }
+//    TZAssetModel *model = _models[self.currentIndex];
+
+    NSArray *selectedModels = [NSArray arrayWithArray:_tzImagePickerVc.selectedModels];
+    for (TZAssetModel *model_item in selectedModels) {
+        // 1.6.7版本更新:防止有多个一样的model,一次性被移除了
+        NSArray *selectedModelsTmp = [NSArray arrayWithArray:_tzImagePickerVc.selectedModels];
+        for (NSInteger i = 0; i < selectedModelsTmp.count; i++) {
+            TZAssetModel *model = selectedModelsTmp[i];
+            if ([model isEqual:model_item]) {
+                /// 需要移除第i个
+                /// 比如要移出第1个 前面有 0 1 2  把1的图片改成2的 把2隐藏了
+                /// 比如要移出第0个 前面有 0 1 2 把 1 2的都需要修改 只把最后一个隐藏
+                /// 如果是隐藏2 直接隐藏
+                UIButton *button = _arrayButtons[i];
+                NSInteger count = _tzImagePickerVc.selectedModels.count;
+                /// 移出的是最后一个
+                if (i == count - 1) {
+                    button.hidden = YES;
+                    [button setImage:nil forState:UIControlStateNormal];
+                } else {
+                    button.hidden = NO;
+                    /// 从前往后移动图片
+                    for (NSInteger j = i; j < _arrayButtons.count - 1; j++) {
+                        UIButton *currentButton = _arrayButtons[j];
+                        UIButton *nextButton = _arrayButtons[j+1];
+                        [currentButton setImage:nextButton.imageView.image forState:UIControlStateNormal];
+                    }
+                    /// 把最后一个隐藏了
+                    _arrayButtons[count - 1].hidden = YES;
+                }
+                
+                [_tzImagePickerVc removeSelectedModel:model];
+                // [_tzImagePickerVc.selectedModels removeObjectAtIndex:i];
+                break;
+            }
+        }
+        if (self.photos) {
+            // 1.6.7版本更新:防止有多个一样的asset,一次性被移除了
+            NSArray *selectedAssetsTmp = [NSArray arrayWithArray:_tzImagePickerVc.selectedAssets];
+            for (NSInteger i = 0; i < selectedAssetsTmp.count; i++) {
+                id asset = selectedAssetsTmp[i];
+                if ([asset isEqual:_assetsTemp[self.currentIndex]]) {
+                    [_tzImagePickerVc.selectedAssets removeObjectAtIndex:i];
+                    break;
+                }
+            }
+            // [_tzImagePickerVc.selectedAssets removeObject:_assetsTemp[self.currentIndex]];
+            [self.photos removeObject:_photosTemp[self.currentIndex]];
+        }
+        [self setAsset:model_item.asset isSelect:NO];
+        continue;
+    }
+    
+    for (TZAssetModel *model in _models) {
+        model.isSelected = NO;
+    }
+    
+    _selectButton.selected = NO;
+    [self updateScrollViewContentSize];
+    [self refreshNaviBarAndBottomBarState];
+    [self.view setNeedsLayout];
+    [self.view layoutIfNeeded];
+}
+
 - (void)originalPhotoButtonClick {
     TZAssetModel *model = _models[self.currentIndex];
     if ([[TZImageManager manager] isAssetCannotBeSelected:model.asset]) {
@@ -719,8 +816,7 @@
         }
         UIButton *selectedButton = [_arrayButtons objectAtIndex:index];
         selectedButton.layer.borderWidth = 3;
-//        selectedButton.layer.borderColor = [UIColor colorWithRed:67 green:122 blue:255 alpha:1].CGColor;
-        selectedButton.layer.borderColor = [UIColor blueColor].CGColor;
+        selectedButton.layer.borderColor = [UIColor colorWithRed:67/255.0 green:122/255.0 blue:255/255.0 alpha:1].CGColor;
     } else {
         _indexLabel.hidden = YES;
         for (UIButton *button in _arrayButtons) {
@@ -735,6 +831,7 @@
         [_doneButton setTitle:_tzImagePickerVc.doneBtnTitleStr forState:UIControlStateNormal];
     }
     _doneButton.enabled = _tzImagePickerVc.selectedModels.count > 0 || _tzImagePickerVc.alwaysEnableDoneBtn;
+    _clearButton.enabled = _tzImagePickerVc.selectedModels.count || _tzImagePickerVc.alwaysEnableDoneBtn;
     _numberImageView.hidden = YES;
     _numberLabel.hidden = YES;
     
