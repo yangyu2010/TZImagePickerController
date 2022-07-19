@@ -264,6 +264,7 @@
 @property (strong, nonatomic) UIColor *iconThemeColor;
 
 @property (nonatomic, copy) NSString *clearButtonTitleString;
+@property (nonatomic, copy) NSString *clearButtonDescString;
 
 #pragma mark -
 - (void)cancelButtonClick;

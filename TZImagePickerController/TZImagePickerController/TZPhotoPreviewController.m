@@ -588,7 +588,9 @@
 }
 
 - (void)clearButtonClick {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"Are you sure to clear all selected pictures？" preferredStyle:UIAlertControllerStyleAlert];
+    TZImagePickerController *_tzImagePickerVc = (TZImagePickerController *)self.navigationController;
+
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:_tzImagePickerVc.clearButtonDescString preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *actionCancel = [UIAlertAction actionWithTitle:[NSBundle tz_localizedStringForKey:@"Cancel"] style:UIAlertActionStyleCancel handler:nil];
     UIAlertAction *actionOK = [UIAlertAction actionWithTitle:[NSBundle tz_localizedStringForKey:@"OK"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self clearAllSelectedPhotos];
