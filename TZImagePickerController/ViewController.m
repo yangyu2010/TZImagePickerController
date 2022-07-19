@@ -402,7 +402,8 @@
     // 设置是否显示图片序号
     imagePickerVc.showSelectedIndex = YES;
     imagePickerVc.clearButtonTitleString = @"清除";
-    
+    imagePickerVc.clearButtonDescString = @"Are you sure to clear all selected pictures？";
+
 #pragma mark - 到这里为止
     
     // You can get the photos by block, the same as by delegate.

@@ -671,6 +671,8 @@
     [self refreshNaviBarAndBottomBarState];
     [self.view setNeedsLayout];
     [self.view layoutIfNeeded];
+    
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)originalPhotoButtonClick {
@@ -893,11 +895,11 @@
             return;
         }
         TZAssetModel *currentModel = self.models[self.currentIndex];
-        if (_tzImagePickerVc.selectedModels.count <= 0) {
-            self->_doneButton.enabled = !currentModel.iCloudFailed;
-        } else {
-            self->_doneButton.enabled = YES;
-        }
+//        if (_tzImagePickerVc.selectedModels.count <= 0) {
+//            self->_doneButton.enabled = !currentModel.iCloudFailed;
+//        } else {
+//            self->_doneButton.enabled = YES;
+//        }
         self->_selectButton.hidden = currentModel.iCloudFailed || !_tzImagePickerVc.showSelectBtn;
         if (currentModel.iCloudFailed) {
             self->_originalPhotoButton.hidden = YES;
